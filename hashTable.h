@@ -23,6 +23,7 @@ class HashTable {
       Entry *T[tableSize];   
    public:
       int hash(const string &key, int tableSize);
+      void insert(const string &key, int tableSize);
 };
 
 #endif

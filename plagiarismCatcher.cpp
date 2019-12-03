@@ -16,11 +16,14 @@ int getdir(string dir, vector<string> &files);
 void clean(string &word);
 
 int main() {
+    int tableSize = 100007;  
+
    string dir = string("sm_doc_set");
    vector<string> files = vector<string>();
    int n = 6; // n-word sequences   
    getdir(dir, files);
-   
+   HashTable *Hash = new HashTable;   
+
    //ifstream myfile; 
    for (int i = 2; i < files.size(); i++) { // starts at 2 to skip home directory & parent directory
       string fileptr = dir + "/" + files[i];
@@ -41,12 +44,13 @@ int main() {
                   sequence.push_back(word);
                }
             }
+
             string nChunk;
             for (int j = 0; j < sequence.size(); j++) {
                nChunk = nChunk + sequence[j];
             }
             cout << nChunk << endl;
-    
+
             sequence.erase(sequence.begin());
          } 
       }
@@ -57,6 +61,8 @@ int main() {
 cout << "DEBUG : iteration " << i << endl;
    }
    return 0;
+   
+   delete(Hash);
 }
 
 /* ---getdir---
