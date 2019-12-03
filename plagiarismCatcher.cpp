@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "hashTable.h"
 
 using namespace std;
 
