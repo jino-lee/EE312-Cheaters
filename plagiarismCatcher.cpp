@@ -20,31 +20,32 @@ int main() {
 
    getdir(dir, files);
    
-   ifstream myfile; 
+   //ifstream myfile; 
    for (int i = 2; i < files.size(); i++) {
       string fileptr = dir + "/" + files[i];
-      cout << fileptr << endl;
+       cout << endl << fileptr << endl;
+      
+      ifstream myfile;
       myfile.open(fileptr.c_str());
       if (myfile.is_open()) {
-         string line;
-         while (getline(myfile,line)) {
-            cout << line << endl;
-         }
-/* // causes infinite loop
-         string word
-         vector<string> sequence;
- 
-         while (!myfile.eof()) {
-            while (sequence.size() < n) {
+         string word;
+	 vector<string> sequence; 
+
+         while (!myfile.eof()) {// extract words from file
+            while (sequence.size() < n && !myfile.eof()) {
                myfile >> word;
-               if (word.length() > 0) {
-               //   sequence.push_back(word);
-                  cout << word;
+               if (word.length() != 0) {
+                  sequence.push_back(word);
                }
             }
-            cout << endl;
+    
+            string nChunk;
+            for (int j = 0; j < sequence.size(); j++) {
+               nChunk = nChunk + sequence[j];
+            }
+            cout << nChunk << endl;
+            sequence.erase(sequence.begin());
          }
-*/
       }
       else cout << "Unable to open file" << endl;
       myfile.close();
