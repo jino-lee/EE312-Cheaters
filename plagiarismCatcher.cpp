@@ -21,17 +21,17 @@ int main() {
    getdir(dir, files);
    
    //ifstream myfile; 
-   for (int i = 2; i < files.size(); i++) {
+   for (int i = 2; i < files.size(); i++) { // starts at 2 to skip home directory & parent directory
       string fileptr = dir + "/" + files[i];
-       cout << endl << fileptr << endl;
+      cout << endl << fileptr << endl;
       ifstream myfile;
       myfile.open(fileptr.c_str());
       
       if (myfile.is_open()) {
          string word;
-	 vector<string> sequence; 
+	      vector<string> sequence; 
       
-         while (myfile) {// extract words from file
+         while (!myfile.eof()) {// extract words from file
             while (sequence.size() < n && !myfile.eof()) {
                myfile >> word;
                clean(word);
