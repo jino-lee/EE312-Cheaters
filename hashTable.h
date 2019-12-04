@@ -12,18 +12,22 @@
 
 using namespace std;
 
-typedef struct Entry {
-   int idx;
+struct Entry {
+   int fileIdx;
    Entry *next;
-} Entry; 
+}; 
+typedef struct Entry Entry;
 
 class HashTable {
    private:
       static const int tableSize = 100007; // number of entries
-      Entry *T[tableSize];   
+      Entry *head[tableSize];
    public:
-      int hash(const string &key, int tableSize);
-      void insert(const string &key, int tableSize);
+      HashTable(); // constructor
+      unsigned int hash(const string &key);
+      void insert(const string &key, const int fileIdx);
+      void printTable() const;
+      ~HashTable();
 };
 
 #endif

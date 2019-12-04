@@ -22,10 +22,13 @@ int main() {
    vector<string> files = vector<string>();
    int n = 6; // n-word sequences   
    getdir(dir, files);
-   HashTable *Hash = new HashTable;   
+   HashTable *Hash = new HashTable; 
 
    //ifstream myfile; 
-   for (int i = 2; i < files.size(); i++) { // starts at 2 to skip home directory & parent directory
+   // remove the first two elements in the files vector (.home directory and parent directory) before iterating
+   files.erase(files.begin());
+   files.erase(files.begin());
+   for (int i = 0; i < files.size(); i++) {
       string fileptr = dir + "/" + files[i];
       cout << endl << fileptr << endl;
       ifstream myfile;
@@ -49,7 +52,13 @@ int main() {
             for (int j = 0; j < sequence.size(); j++) {
                nChunk = nChunk + sequence[j];
             }
-            cout << nChunk << endl;
+            //cout << "currently before the HashTable's insert function is called..." << endl;
+
+            Hash -> insert(nChunk, i); // i is the index of the current file of the files vector. Note the i = 0 and i = 1 are not used (root and parent files)
+            
+            
+            //cout << nChunk << "inserted into Hash Table." << endl;
+            
 
             sequence.erase(sequence.begin());
          } 
@@ -59,10 +68,23 @@ int main() {
 
       myfile.close();
 cout << "DEBUG : iteration " << i << endl;
-   }
-   return 0;
+   } //at this point, done hashing every file
    
+   // Dynamically allocate count 2D array
+   int **countArray = new int*[files.size()];
+
+   for (int i = 0; i < files.size(); i++) {
+      countArray[i] = new int[files.size()];
+   }
+
+   //debugging function to check contents of the HashTable
+   Hash->printTable();
+
+
+
    delete(Hash);
+
+   return 0;
 }
 
 /* ---getdir---
