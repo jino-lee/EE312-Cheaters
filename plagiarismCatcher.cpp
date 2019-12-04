@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include "hashTable.h"
 
 using namespace std;
@@ -16,9 +17,15 @@ int getdir(string dir, vector<string> &files);
 void clean(string &word);
 
 int main() {
-    int tableSize = 100007;  
+   // TRYING LARGER TABLE SIZE FOR BIG DOC SET - failed (program exits during tabulation)
+   int tableSize = 100007;  
+   //int tableSize = 500009;
 
-   string dir = string("sm_doc_set");
+   // uncomment to test different sized doc set inputs
+   //string dir = string("sm_doc_set");
+   string dir = string("med_doc_set");
+   //string dir = string("big_doc_set");
+
    vector<string> files = vector<string>();
    int n = 6; // n-word sequences   
    getdir(dir, files);
@@ -71,21 +78,92 @@ cout << "DEBUG : iteration " << i << endl;
    } //at this point, done hashing every file
    
    // Dynamically allocate count 2D array
-   int **countArray = new int*[files.size()];
-
-   for (int i = 0; i < files.size(); i++) {
-      countArray[i] = new int[files.size()];
+   int numRows = files.size();
+   int numCols = files.size();
+   cout << "Currently right before dynamic allocation of 2D array..." << endl; // debugging cout
+   int **countArray = new int*[numRows];
+   for (int i = 0; i < numRows; i++) {
+      countArray[i] = new int[numCols];
    }
 
-   //debugging function to check contents of the HashTable
-   Hash->printTable();
+   // initialize entries of the 2D countArray to 0
+   for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < numCols; j++) {
+         countArray[i][j] = 0; 
+      }
+   }
 
 
+   // for each file, iterate though the whole Hash Table to find hits
+   cout << "Currently right before tabulating all hits..." << endl; // debugging cout
+   for (int i = 0; i < files.size(); i++) {
+      for (int j = 0; j < tableSize; j++) {
+         if (Hash -> getHead(j) != NULL) {
+            Entry *temp = Hash -> getHead(j);
+            bool foundFlag = false;
+            //Entry *targetPtr = NULL;
+            while (temp != NULL) { // iterate through linked list for target file #
+               if (temp -> fileIdx == i) { 
+                  foundFlag = true; 
+                  break;
+               }
+               temp = temp -> next; // increment pointer
+            }
+            if (foundFlag) {
+               temp = Hash -> getHead(j); // reset temp to point to start of linked list
+               while (temp != NULL) {
+                  if (temp -> fileIdx != i) { // don't count hits against the file itself
+                     countArray[i][temp->fileIdx]++;
+                  }
+                  temp = temp -> next;
+               }
+               foundFlag = false; // reset flag before next iteration (for the next Hash Table slot)
+            }
+         }
+      }
+   }
+   cout << "Currently right after tabulating all hits..." << endl; // debugging cout
 
+   // Print out the files names with the most hits above the given threshold here:
+   // NOTE: STILL NEED TO SORT OUTPUT FROM MOST HITS TO LEAST AND GET THRESHOLD VALUE/"n" FOR N-WORD CHUNKS FROM COMMAND LINE
+   // Only need to check upper triangle since plagiarism is a symmetric property
+   int testThreshold = 200; // CHANGE THIS TO TEST DIFFERENT DOC SETS/TO GET THRESHOLD FROM COMMAND LINE
+   bool plagiarismFlag = false;
+   cout << endl << "PLAGIARISM CHECKER RESULTS: " << endl;
+   for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < numCols; j++) {
+         if (i > j) { // only print from upper triangle
+            if (countArray[i][j] > testThreshold) {
+               plagiarismFlag = true;
+               cout << countArray[i][j] << ": " << files[i] << " and " << files[j] << endl;
+            }
+         }
+      }
+   }
+   if (plagiarismFlag = false) {
+      cout << endl << "None of the files exceeded the given threshold." << endl;
+   }
+   cout << endl;
+
+
+   //debugging function to check contents of the HashTable (uncomment if you want to see HashTable)
+   // Hash->printTable();
+
+
+   // de-allocate 2D array
+   for (int i = 0; i < numRows; i++) {
+         delete[] countArray[i];
+   }
+   delete[] *countArray;
+
+
+   // destruct HashTable
    delete(Hash);
 
    return 0;
 }
+
+
 
 /* ---getdir---
    PRE: Takes string of directory name and address of string vector

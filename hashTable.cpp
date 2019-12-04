@@ -32,6 +32,10 @@ void HashTable::insert(const string &key, const int fileIdx) {
          head[hash(key)] = temp;  
 }
 
+Entry* HashTable::getHead(int tableIdx) {
+   return head[tableIdx];
+}
+
 // function to display hash table 
 void HashTable::printTable() const { 
   for (int i = 0; i < tableSize; i++) { 
@@ -48,7 +52,7 @@ void HashTable::printTable() const {
 
 HashTable::~HashTable() {
    for (int i = 0; i < tableSize; i++) {
-      if (this -> head[i] = NULL) {
+      if (this -> head[i] != NULL) {
          Entry *headTemp = head[i];
          while (headTemp != NULL) {
             Entry *temp = headTemp;

@@ -26,6 +26,7 @@ class HashTable {
       HashTable(); // constructor
       unsigned int hash(const string &key);
       void insert(const string &key, const int fileIdx);
+      Entry* getHead(int tableIdx);
       void printTable() const;
       ~HashTable();
 };
