@@ -22,8 +22,8 @@ int main() {
    //int tableSize = 500009;
 
    // uncomment to test different sized doc set inputs
-   //string dir = string("sm_doc_set");
-   string dir = string("med_doc_set");
+   string dir = string("sm_doc_set");
+   //string dir = string("med_doc_set");
    //string dir = string("big_doc_set");
 
    vector<string> files = vector<string>();
@@ -154,7 +154,7 @@ cout << "DEBUG : iteration " << i << endl;
    for (int i = 0; i < numRows; i++) {
          delete[] countArray[i];
    }
-   delete[] *countArray;
+   delete[] countArray;
 
 
    // destruct HashTable
