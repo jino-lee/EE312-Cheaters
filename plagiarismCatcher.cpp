@@ -25,21 +25,13 @@ bool outputCompare(Output i, Output j) { return (i.count > j.count); }
 
 
 int main(int argc, char *argv[]) {
-   // TRYING LARGER TABLE SIZE FOR BIG DOC SET - failed (program exits during tabulation)
    int tableSize = 100007;  
-   //int tableSize = 500009;
-   
-   // uncomment to test different sized doc set inputs
    string dir = string(argv[1]);
-   //string dir = string("med_doc_set");
-   //string dir = string("big_doc_set");
-
    vector<string> files = vector<string>();
    int n = atoi(argv[2]); // n-word sequences   
    getdir(dir, files);
    HashTable *Hash = new HashTable; 
 
-   //ifstream myfile; 
    // remove the first two elements in the files vector (.home directory and parent directory) before iterating
    files.erase(files.begin());
    files.erase(files.begin());
@@ -67,13 +59,8 @@ int main(int argc, char *argv[]) {
             for (int j = 0; j < sequence.size(); j++) {
                nChunk = nChunk + sequence[j];
             }
-            //cout << "currently before the HashTable's insert function is called..." << endl;
 
             Hash -> insert(nChunk, i); // i is the index of the current file of the files vector. Note the i = 0 and i = 1 are not used (root and parent files)
-            
-            
-            //cout << nChunk << "inserted into Hash Table." << endl;
-            
 
             sequence.erase(sequence.begin());
          } 
@@ -88,7 +75,6 @@ int main(int argc, char *argv[]) {
    // Dynamically allocate count 2D array
    int numRows = files.size();
    int numCols = files.size();
-   // cout << "Currently right before dynamic allocation of 2D array..." << endl; // debugging cout
    int **countArray = new int*[numRows];
    for (int i = 0; i < numRows; i++) {
       countArray[i] = new int[numCols];
@@ -109,7 +95,6 @@ int main(int argc, char *argv[]) {
          if (Hash -> getHead(j) != NULL) {
             Entry *temp = Hash -> getHead(j);
             bool foundFlag = false;
-            //Entry *targetPtr = NULL;
             while (temp != NULL) { // iterate through linked list for target file #
                if (temp -> fileIdx == i) { 
                   foundFlag = true; 
@@ -132,6 +117,7 @@ int main(int argc, char *argv[]) {
    }
    // cout << "Currently right after tabulating all hits..." << endl; // debugging cout
 
+
    // Print out the files names with the most hits above the given threshold here:
    // NOTE: STILL NEED TO SORT OUTPUT FROM MOST HITS TO LEAST AND GET THRESHOLD VALUE/"n" FOR N-WORD CHUNKS FROM COMMAND LINE
    // Only need to check upper triangle since plagiarism is a symmetric property
@@ -153,18 +139,20 @@ int main(int argc, char *argv[]) {
          }
       }
    }
-   if (plagiarismFlag = false) {
-      cout << endl << "None of the files exceeded the given threshold." << endl;
-   }
-   cout << endl;
 
    // print sorted list of outputs
    std::sort(OutputSort.begin(), OutputSort.end(), outputCompare);   
    cout << endl << "PLAGIARISM CHECKER RESULTS: " << endl;
    //for (vector<Output>::iterator i = OutputSort.begin(); i != OutputSort.end(); i++) {
    for (int i = 0; i < OutputSort.size(); i++) {
-      cout << OutputSort[i].count << ": " << OutputSort[i].file1 << OutputSort[i].file2 << endl;
+      cout << OutputSort[i].count << ": " << OutputSort[i].file1 << ", " << OutputSort[i].file2 << endl;
    }
+
+   if (plagiarismFlag == false) {
+      cout << "None of the files exceeded the given threshold." << endl;
+   }
+   cout << endl;
+
 
    //debugging function to check contents of the HashTable (uncomment if you want to see HashTable)
    //Hash->printTable();

@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// constructor that initializes all head pointers to NULL
 HashTable::HashTable() {
    for (int i = 0; i < tableSize; i++) {
       this -> head[i] = NULL; // initialize all pointers to NULL when Table is constructed
@@ -25,6 +26,7 @@ unsigned int HashTable::hash(const string &key) {
    return idx % tableSize; 
 }
 
+// insert a new node into linked list using the hash function to distribute evenly across tables indexes
 void HashTable::insert(const string &key, const int fileIdx) {
          Entry *temp = new Entry;
          temp -> fileIdx = fileIdx;
@@ -32,6 +34,7 @@ void HashTable::insert(const string &key, const int fileIdx) {
          head[hash(key)] = temp;  
 }
 
+// return pointer to the linked list at specified table index
 Entry* HashTable::getHead(int tableIdx) {
    return head[tableIdx];
 }
@@ -49,7 +52,7 @@ void HashTable::printTable() const {
   } 
 } 
 
-
+// destructor to de-allocate all the nodes of each linked list
 HashTable::~HashTable() {
    for (int i = 0; i < tableSize; i++) {
       if (this -> head[i] != NULL) {
